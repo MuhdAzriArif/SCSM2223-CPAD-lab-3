@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeatherNow - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="search-bar">
+            <input type="text" id="city-input" placeholder="Enter city name...">
+            <button id="search-btn">Search</button>
+        </div>
+
+        <div class="card current-weather" id="current-card">
+            <h2 id="city-name" class="skeleton-text skeleton" style="width: 50%; height: 28px;"></h2>
+            <p id="local-time" class="skeleton-text skeleton" style="width: 40%;"></p>
+            
+            <div class="weather-main">
+                <span id="current-temp" class="skeleton-text skeleton" style="width: 30%; height: 40px;"></span>
+                <span id="current-desc" class="skeleton-text skeleton" style="width: 40%;"></span>
+            </div>
+            
+            <div class="weather-details">
+                <p>Humidity: <span id="current-humidity" class="skeleton-text skeleton" style="width: 20%;"></span></p>
+                <p>Wind: <span id="current-wind" class="skeleton-text skeleton" style="width: 30%;"></span></p>
+            </div>
+        </div>
+
+        <div class="forecast-row" id="forecast-container">
+            <div class="forecast-card">
+                <h3 class="skeleton-text skeleton" style="width: 80%;"></h3>
+                <div class="skeleton-text skeleton" style="width: 50px; height: 50px; margin: 0 auto;"></div>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 10px auto 0;"></p>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 5px auto 0;"></p>
+            </div>
+            <div class="forecast-card">
+                <h3 class="skeleton-text skeleton" style="width: 80%;"></h3>
+                <div class="skeleton-text skeleton" style="width: 50px; height: 50px; margin: 0 auto;"></div>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 10px auto 0;"></p>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 5px auto 0;"></p>
+            </div>
+            <div class="forecast-card">
+                <h3 class="skeleton-text skeleton" style="width: 80%;"></h3>
+                <div class="skeleton-text skeleton" style="width: 50px; height: 50px; margin: 0 auto;"></div>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 10px auto 0;"></p>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 5px auto 0;"></p>
+            </div>
+            <div class="forecast-card">
+                <h3 class="skeleton-text skeleton" style="width: 80%;"></h3>
+                <div class="skeleton-text skeleton" style="width: 50px; height: 50px; margin: 0 auto;"></div>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 10px auto 0;"></p>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 5px auto 0;"></p>
+            </div>
+            <div class="forecast-card">
+                <h3 class="skeleton-text skeleton" style="width: 80%;"></h3>
+                <div class="skeleton-text skeleton" style="width: 50px; height: 50px; margin: 0 auto;"></div>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 10px auto 0;"></p>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 5px auto 0;"></p>
+            </div>
+            <div class="forecast-card">
+                <h3 class="skeleton-text skeleton" style="width: 80%;"></h3>
+                <div class="skeleton-text skeleton" style="width: 50px; height: 50px; margin: 0 auto;"></div>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 10px auto 0;"></p>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 5px auto 0;"></p>
+            </div>
+            <div class="forecast-card">
+                <h3 class="skeleton-text skeleton" style="width: 80%;"></h3>
+                <div class="skeleton-text skeleton" style="width: 50px; height: 50px; margin: 0 auto;"></div>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 10px auto 0;"></p>
+                <p class="skeleton-text skeleton" style="width: 60%; margin: 5px auto 0;"></p>
+            </div>
+        </div>
+
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
