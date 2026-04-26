@@ -8,13 +8,25 @@ const weatherCodes = {
     51: { desc: 'Light drizzle', icon: '🌧️' },
     53: { desc: 'Moderate drizzle', icon: '🌧️' },
     55: { desc: 'Dense drizzle', icon: '🌧️' },
+    56: { desc: 'Light freezing drizzle', icon: '🌧️❄️' },
+    57: { desc: 'Dense freezing drizzle', icon: '🌧️❄️' },
     61: { desc: 'Slight rain', icon: '🌦️' },
     63: { desc: 'Moderate rain', icon: '🌧️' },
     65: { desc: 'Heavy rain', icon: '🌧️' },
+    66: { desc: 'Light freezing rain', icon: '🌧️❄️' },
+    67: { desc: 'Heavy freezing rain', icon: '🌧️❄️' },
     71: { desc: 'Slight snow', icon: '🌨️' },
     73: { desc: 'Moderate snow', icon: '❄️' },
     75: { desc: 'Heavy snow', icon: '❄️' },
-    95: { desc: 'Thunderstorm', icon: '⛈️' }
+    77: { desc: 'Snow grains', icon: '❄️' },
+    80: { desc: 'Slight rain showers', icon: '🌦️' },
+    81: { desc: 'Moderate rain showers', icon: '🌧️' },
+    82: { desc: 'Violent rain showers', icon: '⛈️' },
+    85: { desc: 'Slight snow showers', icon: '🌨️' },
+    86: { desc: 'Heavy snow showers', icon: '❄️' },
+    95: { desc: 'Thunderstorm', icon: '⛈️' },
+    96: { desc: 'Thunderstorm with slight hail', icon: '⛈️🧊' },
+    99: { desc: 'Thunderstorm with heavy hail', icon: '⛈️🧊' }
 };
 
 // Event listener for the Search button
@@ -45,6 +57,8 @@ async function fetchWeatherData(city) {
         const weatherData = await weatherResponse.json();
 
         updateUI(location.name, weatherData);
+
+        fetchLocalTime(location.timezone);
 
     } catch (error) {
         showError("Network error: Unable to fetch data. Please check your connection.");
@@ -153,4 +167,46 @@ function hideError() {
     if (errorBanner) {
         errorBanner.style.display = 'none';
     }
+}
+
+function fetchLocalTime(timezoneString) {
+    if (!timezoneString) {
+        displayFallbackTime();
+        return;
+    }
+
+    $.getJSON(`https://worldtimeapi.org/api/timezone/${timezoneString}`)
+        .done(function(data) {
+
+            const localTime = new Date(data.datetime).toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            const timeEl = $('#local-time');
+            timeEl.text(`Local Time: ${localTime}`);
+            
+            // Remove skeleton loading states
+            timeEl.removeClass('skeleton skeleton-text');
+            timeEl.css('width', ''); 
+        })
+        .fail(function() {
+            displayFallbackTime();
+        })
+        .always(function() {
+            console.log(`WorldTimeAPI request completed at: ${new Date().toISOString()}`);
+        });
+}
+
+function displayFallbackTime() {
+    const browserTime = new Date().toLocaleTimeString([], { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+    });
+    
+    const timeEl = $('#local-time');
+    timeEl.text(`Local Time: ${browserTime} (Browser fallback)`);
+    
+    timeEl.removeClass('skeleton skeleton-text');
+    timeEl.css('width', '');
 }
