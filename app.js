@@ -29,39 +29,80 @@ const weatherCodes = {
     99: { desc: 'Thunderstorm with heavy hail', icon: '⛈️🧊' }
 };
 
-// Event listener for the Search button
+let debounceTimer;
+
+document.getElementById('city-input').addEventListener('input', (e) => {
+    const valMsg = document.getElementById('validation-message');
+    
+    valMsg.style.display = 'none'; 
+    
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        const city = e.target.value.trim();
+
+        if (city.length >= 2) {
+            hideError();
+            fetchWeatherData(city);
+        }
+    }, 500); // 500ms delay
+});
+
 document.getElementById('search-btn').addEventListener('click', () => {
     const city = document.getElementById('city-input').value.trim();
-    if (city) {
+    const valMsg = document.getElementById('validation-message');
+    
+    if (city.length < 2) {
+        valMsg.style.display = 'block'; 
+    } else {
+        valMsg.style.display = 'none';
         hideError();
         fetchWeatherData(city);
     }
 });
 
 async function fetchWeatherData(city) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     try {
         const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}`;
-        const geoResponse = await fetch(geoUrl);
+        const geoResponse = await fetch(geoUrl, { signal: controller.signal });
+        
+        if (!geoResponse.ok) {
+            throw new Error(`HTTP Error: ${geoResponse.status}`);
+        }
+        
         const geoData = await geoResponse.json();
 
         if (!geoData.results || geoData.results.length === 0) {
             showError(`City "${city}" not found.`);
+            clearTimeout(timeoutId); 
             return; 
         }
 
         const location = geoData.results[0];
 
+
         const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${location.latitude}&longitude=${location.longitude}&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`;
+        const weatherResponse = await fetch(weatherUrl, { signal: controller.signal });
         
-        const weatherResponse = await fetch(weatherUrl);
+        if (!weatherResponse.ok) {
+            throw new Error(`HTTP Error: ${weatherResponse.status}`);
+        }
+        
         const weatherData = await weatherResponse.json();
+        
+        clearTimeout(timeoutId);
 
         updateUI(location.name, weatherData);
-
         fetchLocalTime(location.timezone);
 
     } catch (error) {
-        showError("Network error: Unable to fetch data. Please check your connection.");
+        if (error.name === 'AbortError') {
+            showError("Request timed out after 10 seconds.");
+        } else {
+            showError(error.message || "A network error occurred.");
+        }
     }
 }
 
@@ -192,6 +233,7 @@ function fetchLocalTime(timezoneString) {
         })
         .fail(function() {
             displayFallbackTime();
+            console.log('fetch local time fail');
         })
         .always(function() {
             console.log(`WorldTimeAPI request completed at: ${new Date().toISOString()}`);
